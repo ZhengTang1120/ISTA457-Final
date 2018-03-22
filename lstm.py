@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+import time
 
 class LSTM(nn.Module):
 
@@ -53,6 +54,7 @@ def train(tweets, words, chars, epochs):
     optimizer = optim.Adam(model.parameters())
 
     for epoch in range(epochs):
+        start = time.time()
         losses = []
         for tweet in tweets:
             model.zero_grad()
@@ -68,7 +70,8 @@ def train(tweets, words, chars, epochs):
             loss.backward()
             optimizer.step()
             losses.append(loss.data.mean())
-        print('[%d/%d] Loss: %.3f' % (epoch+1, epochs, np.mean(losses)))
+        end = time.time()
+        print('[%d/%d] Loss: %.3f Time: %.2f' % (epoch+1, epochs, np.mean(losses), end-start))
     return model
 
 
