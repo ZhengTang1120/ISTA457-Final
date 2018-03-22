@@ -46,13 +46,13 @@ class LSTM(nn.Module):
         tag_scores = self.hidden2tag(self.hidden[0]).view(-1)
         return tag_scores
 
-def train(tweets, words, chars):
+def train(tweets, words, chars, epochs):
     torch.manual_seed(1)
     model = LSTM(300, 300, 100, 100, len(words)+1, len(chars)+1, 11)
     loss_function = nn.MultiLabelSoftMarginLoss()
     optimizer = optim.Adam(model.parameters())
 
-    for epoch in range(5):
+    for epoch in range(epochs):
         losses = []
         for tweet in tweets:
             model.zero_grad()
@@ -68,7 +68,7 @@ def train(tweets, words, chars):
             loss.backward()
             optimizer.step()
             losses.append(loss.data.mean())
-        print('[%d/%d] Loss: %.3f' % (epoch+1, 300, np.mean(losses)))
+        print('[%d/%d] Loss: %.3f' % (epoch+1, epochs, np.mean(losses)))
     return model
 
 

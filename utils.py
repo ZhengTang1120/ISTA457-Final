@@ -1,5 +1,19 @@
 from str2vec import Index
 import numpy as np
+import pickle
+import os.path
+
+def save_model(model, word_index, char_index, file_name):
+    with open(file_name, "wb") as f:
+        pickle.dump((model, word_index, char_index), f)
+
+def load_model(file_name):
+    if os.path.isfile(file_name):
+        content = pickle.load(open(file_name, "rb"))
+        print (content)
+        return content[0], content[1], content[2]
+    else:
+        print ("Model Not Found")
 
 def read_tweets(filename):
     words = set()
