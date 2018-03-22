@@ -10,7 +10,6 @@ def save_indices(word_index, char_index, file_name):
 def load_indices(file_name):
     if os.path.isfile(file_name):
         content = pickle.load(open(file_name, "rb"))
-        print (content)
         return content[0], content[1]
     else:
         print ("Model Not Found")
@@ -58,6 +57,9 @@ class Tweet:
                                 int(fear), int(joy), int(love), int(optimism),
                                 int(pessimism), int(sadness), int(surprise),
                                 int(trust)])
+
+    def __str__(self):
+        return self.id + '\t' + self.content + '\t' +'\t'.join(list(map(str, self.emotions)))
 
     @staticmethod
     def from_line(line):
