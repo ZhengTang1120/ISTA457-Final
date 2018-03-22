@@ -70,7 +70,7 @@ def train(tweets, words, chars, epochs):
             loss.backward()
             optimizer.step()
             losses.append(loss.data.mean())
-        torch.save(model, "%d.model" % epoch+1)
+        torch.save(model, "%d.model" % (epoch+1))
         end = time.time()
         print('[%d/%d] Loss: %.3f Time: %.2f' % (epoch+1, epochs, np.mean(losses), end-start))
     return model
