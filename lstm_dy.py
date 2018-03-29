@@ -26,7 +26,7 @@ class Twitter:
         self.out_hidden_size = out_hidden_size
 
         self.model = dy.Model()
-        self.trainer = dy.AdamTrainer(self.model)
+        self.trainer = dy.SimpleSGDTrainer(self.model)
 
         # words and tags, entities embeddings
         self.wlookup = self.model.add_lookup_parameters((words_size, self.w_embed_size))
