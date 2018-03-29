@@ -8,7 +8,7 @@ if __name__ == '__main__':
 
     # model = lstm.train(tweets, words, chars, 100)
 
-    for i in range(1):
+    for i in range(30):
         model = lstm_dy.Twitter(len(words)+1, len(chars)+1, 300, 300, 100, 100, 2, 100, 11)
         model.train(tweets)
         model.save(str(i))
