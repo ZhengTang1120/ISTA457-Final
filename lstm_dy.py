@@ -10,8 +10,8 @@ import pickle
 class Twitter:
 
     def __init__(self, words_size, chars_size,
-            w_embed_size, c_embed_size, clstm_hidden_size,
-            lstm_hidden_size, lstm_num_layers,
+            w_embed_size, c_embed_size, lstm_hidden_size,
+            clstm_hidden_size, lstm_num_layers,
             out_hidden_size, out_size):
 
         self.words_size = words_size
@@ -25,8 +25,8 @@ class Twitter:
         self.lstm_num_layers = lstm_num_layers
         self.out_hidden_size = out_hidden_size
 
-        self.model = dy.Model()
-        self.trainer = dy.SimpleSGDTrainer(self.model)
+        self.model = dy.ParameterCollection()
+        self.trainer = dy.SimpleSGDTrainer(self.model, learning_rate=0.1)
 
         # words and tags, entities embeddings
         self.wlookup = self.model.add_lookup_parameters((words_size, self.w_embed_size))
@@ -103,7 +103,6 @@ class Twitter:
         return output
 
     def train(self, tweets):
-        losses = []
         loss_all = 0
         total_all = 0
         start_all = time.time()
@@ -114,9 +113,6 @@ class Twitter:
             loss = dy.binary_log_loss(output, dy.inputTensor(gold))
             loss_all += loss.npvalue()[0]
             total_all += 1
-            losses.append(loss)
-        if len(losses) > 0:
-            loss = dy.esum(losses)
             loss.scalar_value()
             loss.backward()
             self.trainer.update()

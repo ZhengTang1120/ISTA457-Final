@@ -8,7 +8,7 @@ import time
 
 class LSTM(nn.Module):
 
-    def __init__(self, wembedding_dim, cembedding_dim, chidden_dim, hidden_dim, vocab_size, chars_size, target_size):
+    def __init__(self, wembedding_dim, cembedding_dim, hidden_dim, chidden_dim, vocab_size, chars_size, target_size):
         super(LSTM, self).__init__()
         self.hidden_dim = hidden_dim
         self.chidden_dim = chidden_dim
@@ -49,7 +49,7 @@ class LSTM(nn.Module):
 
 def train(tweets, words, chars, epochs):
     torch.manual_seed(1)
-    model = LSTM(300, 300, 100, 100, len(words)+1, len(chars)+1, 11)
+    model = LSTM(300, 50, 100, 10, len(words)+1, len(chars)+1, 11)
     loss_function = nn.MultiLabelSoftMarginLoss()
     optimizer = optim.Adam(model.parameters())
 
