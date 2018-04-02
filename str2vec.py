@@ -64,7 +64,7 @@ class Index:
         :return: A 1-dimensional array, with 1s at the indexes of each object,
                  and 0s at all other indexes
         """
-        res = np.zeros(len(self.idx_to_obj))
+        res = np.zeros(len(self.idx_to_obj)+1)
         for obj in object_seq:
             if obj in self.obj_to_idx:
                 res[self.obj_to_idx[obj]] = 1

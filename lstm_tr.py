@@ -8,13 +8,14 @@ import time
 
 class LSTM(nn.Module):
 
-    def __init__(self, wembedding_dim, cembedding_dim, hidden_dim, chidden_dim, vocab_size, chars_size, target_size):
+    def __init__(self, wembedding_dim, cembedding_dim, hidden_dim, chidden_dim, vocab_size, chars_size, hash_size, target_size):
         super(LSTM, self).__init__()
         self.hidden_dim = hidden_dim
         self.chidden_dim = chidden_dim
 
         self.word_embeddings = nn.Embedding(vocab_size, wembedding_dim)
         self.char_embeddings = nn.Embedding(chars_size, cembedding_dim)
+        self.hash_embeddings = nn.Embedding(hash_size, hidden_dim)
 
         self.clstm = nn.LSTM(cembedding_dim, chidden_dim)
         self.lstm = nn.LSTMCell(wembedding_dim+chidden_dim, hidden_dim)
@@ -44,12 +45,18 @@ class LSTM(nn.Module):
             w = torch.cat([w, clstm_out[-1].view(-1)])
             self.hidden = self.lstm(w, self.hidden)
 
-        tag_scores = self.hidden2tag(self.hidden[0]).view(-1)
+        hidden = self.hidden[0]
+        if tweet.hashtags_vec != []:
+            hembeds = self.hash_embeddings(autograd.Variable(torch.LongTensor(tweet.hashtags_vec)))
+            h = torch.mean(hembeds, 0)
+            hidden += h
+
+        tag_scores = self.hidden2tag(hidden).view(-1)
         return tag_scores
 
-def train(tweets, words, chars, epochs):
+def train(tweets, words, chars, hashtags, epochs):
     torch.manual_seed(1)
-    model = LSTM(300, 50, 100, 10, len(words)+1, len(chars)+1, 11)
+    model = LSTM(300, 50, 100, 10, len(words)+1, len(chars)+1, len(hashtags), 11)
     loss_function = nn.MultiLabelSoftMarginLoss()
     optimizer = optim.Adam(model.parameters())
 
