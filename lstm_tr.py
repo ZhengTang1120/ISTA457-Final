@@ -56,7 +56,7 @@ class LSTM(nn.Module):
 
 def train(tweets, words, chars, hashtags, epochs):
     torch.manual_seed(1)
-    model = LSTM(300, 50, 100, 10, len(words)+1, len(chars)+1, len(hashtags), 11)
+    model = LSTM(300, 50, 100, 10, len(words)+1, len(chars)+1, len(hashtags)+1, 11)
     loss_function = nn.MultiLabelSoftMarginLoss()
     optimizer = optim.Adam(model.parameters())
 
